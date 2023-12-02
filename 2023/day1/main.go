@@ -1,42 +1,15 @@
 package main
 
 import (
-	"bufio"
+	"aoc2023/utils"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )
 
-func getSliceFromFile(path string) []string {
-	var slice []string
-	file, err := os.Open(path)
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			panic("Could not close fd, msg: " + err.Error())
-		}
-	}(file)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		slice = append(slice, scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return slice
-}
-
 // ------------------PART ONE-----------------------
 func partOne() {
-	rows := getSliceFromFile("2023/day1/input1.txt")
+	rows := utils.GetSliceFromFile("2023/day1/input1.txt")
 	var totalSum int
 
 	for _, row := range rows {
@@ -94,7 +67,7 @@ func addSpelledNumbersRecursively(fn *[]foundNumbers, row string, sn string, idx
 }
 
 func partTwo() {
-	rows := getSliceFromFile("2023/day1/input2.txt")
+	rows := utils.GetSliceFromFile("2023/day1/input2.txt")
 	var totalSum int
 	var lastWordIndexTakenLst []int
 	spelledNumbers := getSpelledNumbers()
