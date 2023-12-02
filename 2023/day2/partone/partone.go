@@ -19,7 +19,7 @@ func appendOnlyValidGameID(allGameSets []gameSet, validGamesIDSum *int, gameID i
 }
 
 func Run() {
-	rows := utils.GetSliceFromFile("/day2/partone/input1.txt")
+	rows := utils.GetSliceFromFile("/day2/partone/input.txt")
 	validGamesIDSum := 0
 	for _, row := range rows {
 		splitted := strings.Split(row, ": ")
