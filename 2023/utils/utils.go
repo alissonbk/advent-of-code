@@ -4,11 +4,16 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strings"
 )
 
 func GetSliceFromFile(path string) []string {
 	var slice []string
-	file, err := os.Open(path)
+	dir, _ := os.Getwd()
+	if !strings.Contains(dir, "2023") {
+		dir += "/2023/"
+	}
+	file, err := os.Open(dir + path)
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {

@@ -9,7 +9,7 @@ import (
 
 // ------------------PART ONE-----------------------
 func partOne() {
-	rows := utils.GetSliceFromFile("2023/day1/input1.txt")
+	rows := utils.GetSliceFromFile("/day1/input1.txt")
 	var totalSum int
 
 	for _, row := range rows {
@@ -67,7 +67,7 @@ func addSpelledNumbersRecursively(fn *[]foundNumbers, row string, sn string, idx
 }
 
 func partTwo() {
-	rows := utils.GetSliceFromFile("2023/day1/input2.txt")
+	rows := utils.GetSliceFromFile("day1/input2.txt")
 	var totalSum int
 	var lastWordIndexTakenLst []int
 	spelledNumbers := getSpelledNumbers()
