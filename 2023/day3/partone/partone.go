@@ -246,9 +246,6 @@ func Run() {
 					}
 				}
 			}
-			if i == rowLen-1 {
-				fmt.Println(b)
-			}
 		}
 
 	}
