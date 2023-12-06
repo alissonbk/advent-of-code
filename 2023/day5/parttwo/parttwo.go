@@ -88,11 +88,9 @@ func Run() {
 	rows := utils.GetSliceFromFile("/day5/parttwo/input.txt")
 	seedsStr, _ := strings.CutPrefix(rows[0], "seeds: ")
 	oldSeeds := getSliceFromStringRow(seedsStr)
-	seedsQueue := make(chan *uint32, 10) // 16bits would break because of number size
 	var almanacParts AlmanacParts
 	minFinalLocation := -1
 	wg := sync.WaitGroup{}
-	wg.Add(1)
 	now := time.Now()
 
 	for idx := 1; idx < len(rows); idx++ {
@@ -115,8 +113,13 @@ func Run() {
 		}
 	}
 
-	go produceSeeds(oldSeeds, seedsQueue, &wg)
-	go consumeSeeds(seedsQueue, almanacParts, &minFinalLocation)
+	for i := 0; i < len(oldSeeds)-1; i += 2 {
+		channel := make(chan *uint32, 256)
+		wg.Add(1)
+		go produceSeeds([]int{oldSeeds[i], oldSeeds[i+1]}, channel, &wg)
+		go consumeSeeds(channel, almanacParts, &minFinalLocation)
+	}
+
 	wg.Wait()
 
 	fmt.Println("minimun location ", minFinalLocation)
