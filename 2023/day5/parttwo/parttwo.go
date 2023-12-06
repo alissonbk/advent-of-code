@@ -88,7 +88,7 @@ func Run() {
 	rows := utils.GetSliceFromFile("/day5/parttwo/input.txt")
 	seedsStr, _ := strings.CutPrefix(rows[0], "seeds: ")
 	oldSeeds := getSliceFromStringRow(seedsStr)
-	seedsQueue := make(chan *uint32, 65535) // 16bits would break because of number length
+	seedsQueue := make(chan *uint32, 10) // 16bits would break because of number size
 	var almanacParts AlmanacParts
 	minFinalLocation := -1
 	wg := sync.WaitGroup{}
