@@ -82,3 +82,12 @@ func Contains[T comparable](slice []T, n T) bool {
 func RemoveIndex[T comparable](s []T, index int) []T {
 	return append(s[:index], s[index+1:]...)
 }
+
+func InsertAtIndex[T comparable](s *[]T, index int, value T) {
+	if len(*s) == index {
+		*s = append(*s, value)
+		return
+	}
+	*s = append((*s)[:index+1], (*s)[index:]...)
+	(*s)[index] = value
+}
