@@ -1,4 +1,4 @@
-package partone
+package parttwo
 
 import (
 	"aoc2023/utils"
@@ -24,11 +24,15 @@ func getCardStrength(card string) int {
 }
 
 func getHandType(hand string) uint8 {
-	runes := []rune(hand)
 	var checkedRunes []rune
 	var equals []string
 	var numberEquals uint8 = 0
+	runes := []rune(hand)
+	numberOfJ := 0
 	for _, r := range runes {
+		if string(r) == "J" {
+			numberOfJ += 1
+		}
 		for _, checkedRune := range checkedRunes {
 			if r == checkedRune {
 				alreadyInEquals := false
@@ -48,30 +52,78 @@ func getHandType(hand string) uint8 {
 		}
 		checkedRunes = append(checkedRunes, r)
 	}
-
+	// 10 because the loop will double the sum when it's all same value
 	if numberEquals == 10 {
 		return 7 // five of a kind
 	}
+	// 6 because the loop will redo sum once again
+	if numberEquals == 6 {
+		if len(equals) == 1 {
+			if numberOfJ > 0 {
+				return 7 // five of kind with J
+			}
+		}
+	}
 	if numberEquals == 4 {
 		if len(equals) == 1 {
+			if numberOfJ > 0 {
+				return 7 // five of kind with J
+			}
 			return 6 // four of a kind
 		}
 		if len(equals) == 2 {
+			if numberOfJ > 0 {
+				return 7 // five of kind with J
+			}
 			return 5 // full house
 		}
-
 	}
 	if numberEquals == 3 {
 		if len(equals) == 1 {
+			if numberOfJ > 0 {
+				return 6 // four of a kind with J
+			}
 			return 4 // three of a kind
 		}
-
+	}
+	if numberEquals == 2 {
+		if len(equals) == 2 {
+			if numberOfJ == 1 {
+				return 5 // full house with J
+			}
+			if numberOfJ == 2 {
+				return 6 // four of a kind with J
+			}
+			return 2 // two pair
+		}
+	}
+	if numberEquals == 1 {
+		if numberOfJ > 0 {
+			return 4 // three of a king with J
+		}
+		return 1 // one pair
+	}
+	if numberEquals == 0 {
+		if numberOfJ == 1 {
+			return 1 // one pair
+		}
 	}
 	return numberEquals
 }
 
-func isNumber(b byte) bool {
-	return b >= 48 && b <= 57
+func isNumberOrJ(b byte) bool {
+	return (b >= 48 && b <= 57) || b == 74
+}
+
+func getNumberOrJ(str string) int {
+	var n int
+	if str == "J" {
+		n = 1
+	} else {
+		n, _ = strconv.Atoi(str)
+	}
+
+	return n
 }
 
 func appendHandsOrdered(hands *[]Hand, hand Hand) {
@@ -101,9 +153,9 @@ func appendHandsOrdered(hands *[]Hand, hand Hand) {
 
 			}
 
-			if isNumber(byte(oldHand)) && isNumber(byte(newHand)) {
-				oldN, _ := strconv.Atoi(string(oldHand))
-				newN, _ := strconv.Atoi(string(newHand))
+			if isNumberOrJ(byte(oldHand)) && isNumberOrJ(byte(newHand)) {
+				oldN := getNumberOrJ(string(oldHand))
+				newN := getNumberOrJ(string(newHand))
 				if newN < oldN {
 					utils.InsertAtIndex(hands, i, hand)
 					return
@@ -114,10 +166,10 @@ func appendHandsOrdered(hands *[]Hand, hand Hand) {
 					}
 					break
 				}
-			} else if !isNumber(byte(oldHand)) && isNumber(byte(newHand)) {
+			} else if !isNumberOrJ(byte(oldHand)) && isNumberOrJ(byte(newHand)) {
 				utils.InsertAtIndex(hands, i, hand)
 				return
-			} else if isNumber(byte(oldHand)) && !isNumber(byte(newHand)) {
+			} else if isNumberOrJ(byte(oldHand)) && !isNumberOrJ(byte(newHand)) {
 				if i == len(*hands)-1 {
 					*hands = append(*hands, hand)
 					return
@@ -154,6 +206,7 @@ func Run() {
 
 	counter := uint(1)
 	i := uint8(0)
+
 	for i <= 7 {
 		hands := handMap[i]
 		if hands != nil {
