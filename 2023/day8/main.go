@@ -1,7 +1,10 @@
 package main
 
-import "aoc2023/day8/partone"
+import (
+	"aoc2023/day8/parttwo"
+)
 
 func main() {
-	partone.Run()
+	//partone.Run()
+	parttwo.Run()
 }
